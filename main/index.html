@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Permutation Game</title>
+        <link rel="stylesheet" href="style.css">
+    </head> 
+    <body>
+        <div class="container">
+            <h1>⚔️ Commander ⚔️</h1>
+            <p class="subtitle">Arrange your team to defeat the enemy</p>
+            
+            <div class="game-area">
+                
+                <!-- Panel 1: Available Fighters -->
+                <div class="panel">
+                    <h2>Your Fighters</h2>
+                    <div id="available" class="fighters-area"></div>
+                </div>
+
+                <!-- Panel 2: Player Team (Order) -->
+                <div class="panel">
+                    <h2>Your Team</h2>
+                    <div id="player-team" class="fighters-area team-area"></div>
+                    <button id="reset-btn">Reset</button>
+                </div>
+
+                <!-- Panel 3: Enemy Team -->
+                <div class="panel">
+                    <h2>Enemy Team</h2>
+                    <div id="enemy-team" class="fighters-area"></div>
+                </div>
+
+            </div>
+            <button id="fight-btn">FIGHT!</button>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
