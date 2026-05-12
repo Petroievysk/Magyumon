@@ -1,39 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-pt">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Permutation Game</title>
+        <title>Battle! - Commander</title>
         <link rel="stylesheet" href="style.css">
-    </head> 
+    </head>
     <body>
-        <div class="container">
-            <h1>⚔️ Commander ⚔️</h1>
-            <p class="subtitle">Arrange your team to defeat the enemy</p>
-            
-            <div class="game-area">
-                
-                <!-- Panel 1: Available Fighters -->
-                <div class="panel">
-                    <h2>Your Fighters</h2>
-                    <div id="available" class="fighters-area"></div>
+        <div class="main-container">
+            <header>
+                <h1>⚔️ BATTLE ⚔️</h1>
+                <p class="subtitle">FIGHT!</p>
+            </header>
+
+            <main class="game-area">
+                <div class="battle-lane">
+                    <button class="panel player-slot", id="player-slot1"></button>
+                    <button class="panel enemy-slot", id="enemy-slot1"></button>
                 </div>
 
-                <!-- Panel 2: Player Team (Order) -->
-                <div class="panel">
-                    <h2>Your Team</h2>
-                    <div id="player-team" class="fighters-area team-area"></div>
-                    <button id="reset-btn">Reset</button>
+                <div class="battle-lane">
+                    <button class="panel player-slot", id="player-slot2"></button>
+                    <button id="fight-btn">VS</button>
+                    <button class="panel enemy-slot", id="enemy-slot2"></button>
                 </div>
 
-                <!-- Panel 3: Enemy Team -->
-                <div class="panel">
-                    <h2>Enemy Team</h2>
-                    <div id="enemy-team" class="fighters-area"></div>
+                <div class="battle-lane">
+                    <button class="panel player-slot", id="player-slot3"></button>
+                    <button class="panel enemy-slot", id="enemy-slot3"></button>
                 </div>
 
-            </div>
-            <button id="fight-btn">FIGHT!</button>
+                <div id="result-area" style="margin-top: 30px; text-align: center; font-size: 1.4em;"></div>
+            </main>
+
+            <footer class="footer-area">
+                <div class="unit-list">
+                    <button class="unit-slot" data-icon="🔥">🔥</button>
+                    <button class="unit-slot" data-icon="💧">💧</button>
+                    <button class="unit-slot" data-icon="🌪️">🌬️</button>
+                    <button class="unit-slot", id="unit-slot4"></button>
+                    <button class="unit-slot", id="unit-slot5"></button>
+                </div>
+            </footer>
         </div>
         <script src="index.js"></script>
     </body>

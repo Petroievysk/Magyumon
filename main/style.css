@@ -1,90 +1,85 @@
-* {
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #0f172a;
+    /* backgroung-color: white; */
+    color: white;
+    overflow: hidden; 
+}
+
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+    padding: 40px;
     box-sizing: border-box;
 }
 
-body {
-    background-color: #0f172a;
-    display: flex;
-    justify-content: center;
-    /* align-items: center; */
-    height: 100vh;
-    margin: 0;
-    padding: 20px;
+header {
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
-    color: #60a5fa;
+    margin: 0;
 }
 
 .subtitle {
-    text-align: center;
+    margin-top: 5px;
     color: #94a3b8;
-    margin-bottom: 30px;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
 .game-area {
+    flex: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center;
     gap: 30px;
-    flex-wrap: wrap;
+    padding-top: 20px; /
 }
 
-.panel {
-    background-color: #1e2937;
-    border-radius: 16px;
-    padding: 20px;
-    width: 320px;
-    text-align: center;
-}
-
-.panel h2 {
-    margin-top: 0;
-    color: #cbd5e1;
-}
-
-.fighters-area {
-    min-height: 200px;
-    background-color: #0f172a;
-    border: 3px dashed #475569;
-    border-radius: 12px;
-    padding: 20px;
+.battle-lane {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    align-content: flex-start;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+    max-width: 500px;
 }
 
-.team-area {
-    border-color: #60a5fa;
+/* Slots de Batalha */
+.panel {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
 }
 
-button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #60a5fa;
-    color: #0f172a;
-    border: none;
-    border-radius: 8px;
+.player-slot {
+    border: 2px dashed #3b82f6;
     cursor: pointer;
+    font-size: 2em;
 }
 
-button:hover {
-    background-color: #93c5fd;
+.player-slot:hover {
+    background: rgba(59, 130, 246, 0.3);
+    transform: none; 
+}
+
+.enemy-slot {
+    border: 2px solid #ef4444;
+    font-size: 2em;
 }
 
 #fight-btn {
     display: block;
-    margin: 30px auto;
-    padding: 14px 40px;
-    font-size: 2em;
+    /* margin: 30px auto; */
+    padding: 0px 40px;
+    font-size: 4em;
     font-weight: bold;
     background-color: #ef4444;
     color: white;
@@ -99,51 +94,39 @@ button:hover {
     transform: translateY(-2px);
 }
 
-.unit {
-    width: 90px;
-    height: 110px;
-    background-color: #1e2937;
-    border-radius: 12px;
+.footer-area {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    cursor: grab;
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding-bottom: 30px;
+    width: 100%;
 }
 
-.unit:hover {
-    transform: scale(1.08);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-.enemy {
-    width: 90px;
-    height: 110px;
-    background-color: #1e2937;
-    border-radius: 12px;
+.unit-list {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: default;
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    gap: 0; 
+    background: rgba(59, 130, 246, 0.1); 
+    border: 2px solid #3b82f6;           
+    border-radius: 12px;                 
+    overflow: hidden;                    
 }
 
-.icon {
-    font-size: 48px;
-    margin-bottom: 6px;
+.unit-slot {
+    width: 80px;  
+    height: 60px;
+    border: none;
+    border-radius: 0; 
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-right: 1px solid rgba(59, 130, 246, 0.3);
+    font-size: 2em;
 }
 
-.name {
-    font-size: 14px;
-    font-weight: bold;
-    color: #e2e8f0;
+.unit-slot:last-child {
+    border-right: none;
 }
 
-/* Type colors */
-.fire  { border: 3px solid #ef4444; }
-.water { border: 3px solid #3b82f6; }
-.wind  { border: 3px solid #22c55e; }
+.unit-slot:hover {
+    background: rgba(59, 130, 246, 0.3);
+    transform: none; 
+}

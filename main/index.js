@@ -1,10 +1,4 @@
 const levelTest = {
-    playerFighters: [
-        { id: 1, type: "fire",  icon: "🔥", name: "Fire" },
-        { id: 2, type: "water", icon: "💧", name: "Water" },
-        { id: 3, type: "wind",  icon: "🌪️", name: "Wind" }
-    ],
-    
     enemyTeam: [
         { type: "fire",  icon: "🔥", name: "Fire" },
         { type: "water", icon: "💧", name: "Water" },
@@ -12,39 +6,121 @@ const levelTest = {
     ]
 };
 
-function renderFighters(level) {
-    const container = document.getElementById('available');
-    container.innerHTML = '';
+function renderEnemies(level) {
+    const enemySlots = [
+        document.getElementById('enemy-slot1'),
+        document.getElementById('enemy-slot2'),
+        document.getElementById('enemy-slot3')
+    ];
 
-    level.playerFighters.forEach(fighter => {
-        const unit = document.createElement('div');
-        unit.className = `unit ${fighter.type}`;
-        unit.draggable = true;
-        unit.id = fighter.id;
-        unit.innerHTML = `
-            <div class="icon">${fighter.icon}</div>
-            <div class="name">${fighter.name}</div>
-        `;
-        container.appendChild(unit);
+    level.enemyTeam.forEach((enemy, i) => {
+        if (i >= enemySlots.length) return;
+        const slot = enemySlots[i];
+        slot.textContent = enemy.icon;
+        slot.classList.add('enemy', enemy.type);
     });
 }
 
-function renderEnemies(level) {
-    const container = document.getElementById('enemy-team');
-    container.innerHTML = '';
+function setupUnitSlots() {
+    const unitSlots = document.querySelectorAll('.unit-slot');
 
-    level.enemyTeam.forEach(enemy => {
-        const unit = document.createElement('div');
-        unit.className = `enemy ${enemy.type}`;
-        unit.innerHTML = `
-            <div class="icon">${enemy.icon}</div>
-            <div class="name">${enemy.name}</div>
-        `;
-        container.appendChild(unit);
+    unitSlots.forEach(slot => {
+        slot.addEventListener('click', () => {
+            const icon = slot.dataset.icon || slot.textContent.trim();
+            if (!icon) return;
+
+            const playerSlots = [
+                document.getElementById('player-slot1'),
+                document.getElementById('player-slot2'),
+                document.getElementById('player-slot3')
+            ];
+
+            const emptySlot = playerSlots.find(s => s.textContent.trim() === '');
+
+            if (!emptySlot) {
+                alert("All player slots are full!");
+                return;
+            }
+
+            emptySlot.textContent = icon;
+            emptySlot.classList.add('player-unit');
+
+            slot.textContent = '';
+            delete slot.dataset.icon;
+        });
     });
+}
+
+function normalizeIcon(icon) {
+    if (!icon) return '';
+    if (icon === '🌬️') return '🌪️';
+    return icon;
+}
+
+function getResult(playerIcon, enemyIcon) {
+    playerIcon = normalizeIcon(playerIcon);
+    enemyIcon = normalizeIcon(enemyIcon);
+
+    if (playerIcon === enemyIcon) return 'tie';
+
+    if (
+        (playerIcon === '💧' && enemyIcon === '🔥') ||  // Water beats Fire
+        (playerIcon === '🔥' && enemyIcon === '🌪️') ||  // Fire beats Wind
+        (playerIcon === '🌪️' && enemyIcon === '💧')     // Wind beats Water
+    ) {
+        return 'win';
+    }
+
+    return 'lose';
+}
+
+function fight() {
+    const playerSlots = [
+        document.getElementById('player-slot1'),
+        document.getElementById('player-slot2'),
+        document.getElementById('player-slot3')
+    ];
+
+    const enemySlots = [
+        document.getElementById('enemy-slot1'),
+        document.getElementById('enemy-slot2'),
+        document.getElementById('enemy-slot3')
+    ];
+
+    let wins = 0, ties = 0, losses = 0;
+
+    for (let i = 0; i < 3; i++) {
+        const pIcon = playerSlots[i].textContent.trim();
+        const eIcon = enemySlots[i].textContent.trim();
+
+        if (!pIcon) {
+            losses++;
+            continue;
+        }
+
+        const result = getResult(pIcon, eIcon);
+
+        if (result === 'win') wins++;
+        else if (result === 'tie') ties++;
+        else losses++;
+    }
+
+    const resultArea = document.getElementById('result-area');
+    resultArea.innerHTML = `
+        <strong>Battle Result</strong><br>
+        ✅ Wins: ${wins} &nbsp;&nbsp;
+        🤝 Ties: ${ties} &nbsp;&nbsp;
+        ❌ Losses: ${losses}
+    `;
+}
+
+function setupFightButton() {
+    const fightBtn = document.getElementById('fight-btn');
+    fightBtn.addEventListener('click', fight);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderFighters(levelTest);
     renderEnemies(levelTest);
+    setupUnitSlots();
+    setupFightButton();
 });
