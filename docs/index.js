@@ -2,18 +2,24 @@ const levelTest = {
     playerUnits: [
         { type: "fire",  icon: "🔥", name: "Fire" },
         { type: "water", icon: "💧", name: "Water" },
-        { type: "wind",  icon: "🌪️", name: "Wind" }
+        { type: "wind",  icon: "🌪️", name: "Wind" },
+        { type: "lightning",  icon: "⚡", name: "Lightning" },
+        { type: "rock",  icon: "⛰️", name: "Rock" },
     ],
     enemyTeam: [
         { type: "fire",  icon: "🔥", name: "Fire" },
         { type: "water", icon: "💧", name: "Water" },
-        { type: "wind",  icon: "🌪️", name: "Wind" }
+        { type: "wind",  icon: "🌪️", name: "Wind" },
+        { type: "lightning",  icon: "⚡", name: "Lightning" },
+        { type: "rock",  icon: "⛰️", name: "Rock" },
     ]
 };
-function loadLevel(level){
+
+function loadLevel(level) {
+    createBattleArea(level);
     renderEnemies(level);
-    renderUnits(level);
-    setupSlots();
+    renderPlayerUnits(level);
+    setupEventListeners();
 }
 
 function getSlots(slotClass) {
@@ -26,42 +32,73 @@ function getSlots(slotClass) {
     return slots;
 }
 
+function createBattleArea(level) {
+    let numSlots = level.enemyTeam.length;
+    const container = document.getElementById('battle-container');
+    container.innerHTML = ''; 
+
+    for (let i = 1; i <= numSlots; i++) {
+        const lane = document.createElement('div');
+        lane.className = 'battle-lane';
+        
+        // VS button roughly in the middle
+        const isMiddle = (i === Math.ceil(numSlots / 2));
+        
+        lane.innerHTML = `
+            <button class="panel player-slot" id="player-slot${i}"></button>
+            
+            ${isMiddle ? `
+                <div class="fight-wrapper">
+                    <button id="fight-btn">VS</button>
+                </div>
+            ` : `<div class="spacer"></div>`}
+            
+            <button class="panel enemy-slot" id="enemy-slot${i}"></button>
+        `;
+        
+        container.appendChild(lane);
+    }
+}
 function renderEnemies(level) {
     const enemySlots = getSlots('.enemy-slot');
 
-    level.enemyTeam.forEach((enemy, i) => {
-        if (i >= enemySlots.length) return;
-        const slot = enemySlots[i];
-        slot.textContent = enemy.icon;
+    enemySlots.forEach((slot, i) => {
+        const enemy = level.enemyTeam[i];
+        if (!enemy) return;
+        
+        slot.innerHTML = `<img src="../images/${enemy.type}.png" alt="${enemy.icon}" class="unit-img">`;
         slot.dataset.type = enemy.type;
         slot.dataset.name = enemy.name;
-
         slot.classList.add('enemy', enemy.type);
     });
 }
-function renderUnits(level) {
+function renderPlayerUnits(level) {
     const unitSlots = getSlots('.unit-slot');
 
     unitSlots.forEach(slot => {
         slot.innerHTML = '';
         slot.className = 'unit-slot';
+        // remove any old data
+        delete slot.dataset.type;
+        delete slot.dataset.id;
     });
 
     level.playerUnits.forEach((unit, i) => {
-        if (i >= unitSlots.length || i >= level.playerUnits.length) return;
+        if (i >= unitSlots.length) return;
         const slot = unitSlots[i];
-        slot.textContent = unit.icon;
+        
+        slot.innerHTML = `<img src="../images/${unit.type}.png" alt="${unit.icon}" class="unit-img">`;
         slot.dataset.type = unit.type;
         slot.dataset.name = unit.name;
         slot.dataset.id = i;
-
         slot.classList.add('unit', unit.type);
     });
 }
 
-function setupSlots() {
+function setupEventListeners() {
     setupUnitSlots();
     setupPlayerSlots();
+    setupFightButton();
 }
 function setupUnitSlots() {
     const unitSlots = getSlots('.unit-slot');
@@ -91,76 +128,56 @@ function setupPlayerSlots() {
         slot.addEventListener('click', slot._playerClickHandler);
     });
 }
-
-function normalizeIcon(icon) {
-    if (!icon) return '';
-    if (icon === '🌬️') return '🌪️';
-    return icon;
-}
-
-function getResult(playerIcon, enemyIcon) {
-    playerIcon = normalizeIcon(playerIcon);
-    enemyIcon = normalizeIcon(enemyIcon);
-
-    if (playerIcon === enemyIcon) return 'tie';
-
-    if (
-        (playerIcon === '💧' && enemyIcon === '🔥') ||  // Water beats Fire
-        (playerIcon === '🔥' && enemyIcon === '🌪️') ||  // Fire beats Wind
-        (playerIcon === '🌪️' && enemyIcon === '💧')     // Wind beats Water
-    ) {
-        return 'win';
-    }
-
-    return 'lose';
+function setupFightButton() {
+    // The button is created dynamically
+    document.getElementById('battle-container').addEventListener('click', (e) => {
+        if (e.target.id === 'fight-btn') {
+            fight();
+        }
+    });
 }
 
 function createUnitSlotClickHandler() {
     return function handleUnitSlotClick() {
         const unitSlot = this;
-        const icon = unitSlot.textContent.trim();
-        if (!icon) return;
+        const img = unitSlot.querySelector('img');
+        if (!img) return;
 
-        // === DYNAMIC: Get ALL player slots (no hardcoding) ===
         const playerSlots = getSlots('.player-slot');
-        
-        // Find the first empty slot
-        const emptySlot = playerSlots.find(slot => slot.textContent.trim() === '');
+        const emptySlot = playerSlots.find(slot => !slot.querySelector('img'));
 
         if (!emptySlot) {
             alert("All player slots are full!");
             return;
         }
 
-        // Place the unit
-        emptySlot.textContent = icon;
+        // Move image
+        emptySlot.innerHTML = img.outerHTML;
         emptySlot.dataset.id = unitSlot.dataset.id;
-        emptySlot.classList.add('player-unit');
+        emptySlot.dataset.type = unitSlot.dataset.type;
+        emptySlot.classList.add('player-unit', unitSlot.dataset.type);
 
-        if (unitSlot.dataset.type) {
-            emptySlot.classList.add(unitSlot.dataset.type);
-        }
-
-        // Remove from the unit list
-        unitSlot.textContent = '';
+        // Clear source slot
+        unitSlot.innerHTML = '';
         delete unitSlot.dataset.type;
     };
 }
 function createPlayerSlotClickHandler() {
     return function handlePlayerSlotClick() {
         const playerSlot = this;
-        const id = playerSlot.dataset.id;
-        const icon = playerSlot.textContent.trim();
-        if (!icon) return;
+        const img = playerSlot.querySelector('img');
+        if (!img) return;
 
-        const unitSlot = getSlots('.unit-slot');
+        const unitSlots = getSlots('.unit-slot');
+        const id = parseInt(playerSlot.dataset.id);
 
-        // Place the unit
-        unitSlot[id].textContent = playerSlot.textContent;
-        unitSlot[id].dataset.type = playerSlot.dataset.type;
+        if (unitSlots[id]) {
+            unitSlots[id].innerHTML = img.outerHTML;
+            unitSlots[id].dataset.type = playerSlot.dataset.type;
+        }
 
-        // Remove from the player slot
-        playerSlot.textContent = '';
+        // Clear player slot
+        playerSlot.innerHTML = '';
         delete playerSlot.dataset.type;
         delete playerSlot.dataset.id;
     };
@@ -172,16 +189,20 @@ function fight() {
 
     let wins = 0, ties = 0, losses = 0;
 
-    for (let i = 0; i < 3; i++) {
-        const pIcon = playerSlots[i].textContent.trim();
-        const eIcon = enemySlots[i].textContent.trim();
-
-        if (!pIcon) {
+    for (let i = 0; i < playerSlots.length; i++) {
+        const pSlot = playerSlots[i];
+        const eSlot = enemySlots[i];
+        
+        // Get type from dataset (this is what you asked for)
+        const pType = pSlot.dataset.type || '';
+        const eType = eSlot.dataset.type || '';
+        
+        if (!pType) {
             losses++;
             continue;
         }
 
-        const result = getResult(pIcon, eIcon);
+        const result = getResult(pType, eType);
 
         if (result === 'win') wins++;
         else if (result === 'tie') ties++;
@@ -196,13 +217,22 @@ function fight() {
         ❌ Losses: ${losses}
     `;
 }
+function getResult(playerType, enemyType) {
+    if (playerType === enemyType) return 'tie';
 
-function setupFightButton() {
-    const fightBtn = document.getElementById('fight-btn');
-    fightBtn.addEventListener('click', fight);
+    if (
+        (playerType === 'water' && enemyType === 'fire') ||     // Water beats Fire
+        (playerType === 'fire' && enemyType === 'wind') ||      // Fire beats Wind
+        (playerType === 'wind' && enemyType === 'rock') ||      // Wind beats Rock
+        (playerType === 'rock' && enemyType === 'lightning') || // Rock beats Lightning
+        (playerType === 'lightning' && enemyType === 'water')   // Lightning beats Water
+    ) {
+        return 'win';
+    }
+
+    return 'lose';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     loadLevel(levelTest);
-    setupFightButton();
 });
