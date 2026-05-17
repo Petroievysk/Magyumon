@@ -101,7 +101,7 @@ function renderEnemies(level) {
         const enemy = level.enemyTeam[i];
         if (!enemy) return;
         
-        slot.innerHTML = `<img src="../images/${enemy.type}.png" alt="${enemy.icon}" class="unit-img">`;
+        slot.innerHTML = `<img src="./images/${enemy.type}.png" alt="${enemy.icon}" class="unit-img">`;
         slot.dataset.type = enemy.type;
         slot.dataset.name = enemy.name;
         slot.classList.add('enemy', enemy.type);
@@ -122,7 +122,7 @@ function renderPlayerUnits(level) {
         if (i >= unitSlots.length) return;
         const slot = unitSlots[i];
         
-        slot.innerHTML = `<img src="../images/${unit.type}.png" alt="${unit.icon}" class="unit-img">`;
+        slot.innerHTML = `<img src="./images/${unit.type}.png" alt="${unit.icon}" class="unit-img">`;
         slot.dataset.type = unit.type;
         slot.dataset.name = unit.name;
         slot.dataset.id = i;
