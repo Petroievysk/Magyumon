@@ -1,17 +1,52 @@
+// ============== SCREEN MANAGEMENT ==============
+const screens = {
+    menu: document.getElementById('screen-menu'),
+    tutorial: document.getElementById('screen-tutorial'),
+    game: document.getElementById('screen-game'),
+    test: document.getElementById('test-screen'),
+};
+
+function showScreen(screenName) {
+    Object.values(screens).forEach(screen => {
+        screen.classList.remove('active');
+    });
+    screens[screenName].classList.add('active');
+}
+
+// ============== NAVIGATION BUTTONS ==============
+document.addEventListener('DOMContentLoaded', () => {
+    // Button listeners
+    document.getElementById('btn-play').addEventListener('click', () => {
+        showScreen('game');
+        loadLevel(levelTest);
+    });
+
+    document.getElementById('btn-tutorial').addEventListener('click', () => {
+        showScreen('tutorial');
+    });
+
+    document.getElementById('btn-back').addEventListener('click', () => {
+        showScreen('menu');
+    });
+
+    // Start on main menu
+    showScreen('menu');
+});
+
 const levelTest = {
     playerUnits: [
         { type: "fire",  icon: "🔥", name: "Fire" },
         { type: "water", icon: "💧", name: "Water" },
         { type: "wind",  icon: "🌪️", name: "Wind" },
-        { type: "lightning",  icon: "⚡", name: "Lightning" },
-        { type: "rock",  icon: "⛰️", name: "Rock" },
+        { type: "lightning",  icon: "⚡️", name: "Lightning" },
+        { type: "rock",  icon: "⛰️️", name: "Rock" },
     ],
     enemyTeam: [
         { type: "fire",  icon: "🔥", name: "Fire" },
         { type: "water", icon: "💧", name: "Water" },
         { type: "wind",  icon: "🌪️", name: "Wind" },
-        { type: "lightning",  icon: "⚡", name: "Lightning" },
-        { type: "rock",  icon: "⛰️", name: "Rock" },
+        { type: "lightning",  icon: "⚡️", name: "Lightning" },
+        { type: "rock",  icon: "⛰️️", name: "Rock" },
     ]
 };
 
