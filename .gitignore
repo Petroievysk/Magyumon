@@ -1,4 +1,6 @@
-*
-!docs/
-!README.md
-!.gitignore
+test/
+og-images/
+main-menu/
+.html
+.js
+.css
