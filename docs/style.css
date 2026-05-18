@@ -10,6 +10,25 @@ body, html {
     overflow-x: hidden;
 }
 
+header {
+    display: block;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+}
+
+.subtitle {
+    margin-top: 5px;
+    color: #94a3b8;
+}
+
 .main-container {
     display: flex;
     flex-direction: column;
@@ -31,6 +50,21 @@ body, html {
 /* .hidden { display: none !important; } */
 
 /* Menu styling */
+#screen-menu {
+    align-items: center;
+}
+.menu {
+    background-color: #1e293b;
+    border: 2px solid #3b82f6;
+    border-radius: 16px;
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 460px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
 .menu-buttons {
     display: flex;
     flex-direction: column;
@@ -57,7 +91,7 @@ body, html {
     transform: translateY(-3px);
 }
 
-/* TUTORIAL SCREEN */
+/* ======================= TUTORIAL SCREEN ================================== */
 #screen-tutorial {
     background-color: #0f172a;
 }
@@ -76,7 +110,7 @@ body, html {
     background-color: #1e293b;
     border: 2px solid #3b82f6;
     border-radius: 16px;
-    padding: 40px 30px;
+    padding: 40px 30px 0px;
     width: 90%;
     max-width: 460px;
     text-align: center;
@@ -107,8 +141,8 @@ body, html {
     margin-bottom: 18px;
 }
 
-.btn-back {
-    background-color: #ef4444;
+.back-btn-style {
+    background-color: #3b82f6;
     color: white;
     border: none;
     padding: 14px 40px;
@@ -121,24 +155,10 @@ body, html {
     margin-top: 15px;
 }
 
-.btn-back:hover {
-    background-color: #dc2626;
+.back-btn-style:hover {
+    background-color: #60a5fa;
     transform: scale(1.03);
 }
-
-header {
-    text-align: center;
-}
-
-h1 {
-    margin: 0;
-}
-
-.subtitle {
-    margin-top: 5px;
-    color: #94a3b8;
-}
-
 
 .game-area {
     flex: 1;
@@ -149,25 +169,6 @@ h1 {
     gap: 30px;
     padding-top: 20px;
     overflow-y: auto;
-}
-
-.battle-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 35px;
-    width: 100%;
-    padding: 20px 0;
-}
-
-.battle-lane {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    width: 80%;
-    max-width: 700px;
 }
 
 .fight-wrapper {
@@ -203,31 +204,101 @@ h1 {
     transform: translateY(-3px);
 }
 
-/* Battle slots */
+/* =========================== Battle Screen ========================== */
+.battle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    width: 100%;
+    /* padding: 20px 0; */
+}
+
+/* .battle-lane { */
+/*     flex-shrink: 0; */
+/*     display: flex; */
+/*     align-items: center; */
+/*     justify-content: center; */
+/*     gap: 40px; */
+/*     width: 80%; */
+/*     max-width: 700px; */
+/* } */
+
+/* Back to Menu Button */
+#btn-menu-from-game {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #334155;
+    color: white;
+    border: 2px solid #64748b;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+#btn-menu-from-game:hover {
+    background-color: #475569;
+    border-color: #94a3b8;
+    transform: translateY(-2px);
+}
+
+#btn-menu-from-game:active {
+    transform: scale(0.95);
+}
+
+.battle-row {
+    flex-shrink: 0;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 80%;
+}
+
+.vs-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* padding: 10px 0; */
+}
+
+.panel, .unit-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
 .panel {
-    width: 80px;
-    height: 80px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.05);
+    font-size: 2.8em;
+    width: 90px;
+    height: 90px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .player-slot {
     border: 2px dashed #3b82f6;
     cursor: pointer;
-    font-size: 2em;
+    transition: all 0.2s;
 }
 
 .player-slot:hover {
     background: rgba(59, 130, 246, 0.3);
     transform: none; 
+    scale: 1.05;
 }
 
 .enemy-slot {
     border: 2px solid #ef4444;
-    font-size: 2em;
 }
 
-.footer-area {
+.unit-area {
     display: flex;
     justify-content: center;
     padding-bottom: 30px;
@@ -268,16 +339,8 @@ h1 {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    pointer-events: none; /* so clicks go to the parent slot */
-    image-rendering: crisp-edges; /* optional: sharper pixel art */
-}
-
-.player-slot, .enemy-slot, .unit-slot {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    box-sizing: border-box;
+    pointer-events: none;
+    image-rendering: crisp-edges;
 }
 
 /* Make unit list slots a bit taller for images */
@@ -285,9 +348,69 @@ h1 {
 /*     height: 80px; */
 /* } */
 
-/* DEBUG - remove after fixing */
-#screen-game.active {
-    background: #1e293b !important;
-    display: flex !important;
-    visibility: visible !important;
+/* ======================= RESULTS SCREEN ======================= */
+#screen-results {
+    justify-content: center;
+    align-items: center;
+}
+
+.results-container {
+    background-color: #1e293b;
+    border: 3px solid #3b82f6;
+    border-radius: 20px;
+    padding: 50px 40px;
+    width: 90%;
+    max-width: 480px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+.result-icon {
+    font-size: 6rem;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.result-title {
+    font-size: 3rem;
+    margin: 10px 0 8px 0;
+    font-weight: bold;
+}
+
+.result-subtitle {
+    font-size: 1.4rem;
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+.battle-stats {
+    background-color: #0f172a;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 25px 0;
+    font-size: 1.5rem;
+    line-height: 1.8;
+}
+
+.results-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+#btn-next-level {
+    background-color: #22c55e;
+}
+
+#btn-next-level:hover {
+    background-color: #4ade80;
+}
+
+#btn-try-again {
+    background-color: #f59e0b;
+}
+
+#btn-try-again:hover {
+    background-color: #fbbf24;
 }

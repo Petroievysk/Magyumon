@@ -11,13 +11,12 @@
 
             <!-- ==================== MAIN MENU ==================== -->
             <div id="screen-menu" class="screen">
-                <header>
-                    <h1>⚔️ BATTLE ⚔️</h1>
-                    <p class="subtitle">Commander</p>
-                </header>
-                <div class="menu-buttons">
-                    <button id="btn-play" class="big-btn">JOGAR</button>
-                    <button id="btn-tutorial" class="big-btn">COMO JOGAR</button>
+                <div class="menu">
+                    <h1 class="title">MAGYUMON</h1>
+                    <div class="menu-buttons">
+                        <button id="btn-play" class="big-btn">JOGAR</button>
+                        <button id="btn-tutorial" class="big-btn">COMO JOGAR</button>
+                    </div>
                 </div>
             </div>
 
@@ -29,7 +28,7 @@
                         <div class="tutorial-content">
                             <p><strong>OBJETIVO:</strong> O combate acontece em uma série de duelos 1v1. Quem conseguir o maior número de vitórias nas linhas de batalha vence a partida.</p>
                             
-                            <p><strong>ESTRATÉGIA:</strong> A ordem das suas unidades importa muito. Analise o time adversário e posicione seus lutadores de forma inteligente.</p>
+                            <p><strong>ESTRATÉGIA:</strong> A ordem de suas unidades importa. Analíse o time adversário e posicione seus lutadores de forma inteligente.</p>
                             <p><strong>ELEMENTOS:</strong> Use a vantagem elemental a seu favor. 
                                 <ul>
                                     <li>💧 <strong>Água</strong> ganha de 🔥 <strong>Fogo</strong></li>
@@ -39,7 +38,7 @@
                                     <li>⚡️ <strong>Raio</strong> ganha de 💧 <strong>Água</strong></li>
                                 </ul>
 
-                                <button id="btn-back" class="btn-back">← VOLTAR</button>
+                                <button id="btn-menu-from-tutorial" class="back-btn back-btn-style">← VOLTAR</button>
                         </div>
                     </div>
                 </div>
@@ -49,15 +48,18 @@
             <div id="screen-game" class="screen">
                 <header>
                     <h1>⚔️ BATTLE ⚔️</h1>
-                    <p class="subtitle">Level 1</p>
+                    <p class="subtitle" id="level-number"></p>
+
+                    <button id="btn-menu-from-game" class="back-btn">
+                        ← MENU
+                    </button>
                 </header>
 
                 <main class="game-area">
                     <div id="battle-container" class="battle-container"></div>
                     <div id="result-area" style="margin-top: 30px; text-align: center; font-size: 1.4em;"></div>
                 </main>
-
-                <footer class="footer-area">
+                <div class="unit-area">
                     <div class="unit-list">
                         <button class="unit-slot"></button>
                         <button class="unit-slot"></button>
@@ -65,8 +67,28 @@
                         <button class="unit-slot"></button>
                         <button class="unit-slot"></button>
                     </div>
-                </footer>
+                </div>
             </div>
+
+            <!-- ==================== RESULTS SCREEN ==================== -->
+            <div id="screen-results" class="screen">
+                <div class="results-container">
+                    <div id="result-icon" class="result-icon"></div>
+                    
+                    <h1 id="result-title" class="result-title"></h1>
+                    <p id="result-subtitle" class="result-subtitle"></p>
+                    
+                    <div id="battle-stats" class="battle-stats"></div>
+                    
+                    <div class="results-buttons">
+                        <button id="btn-next-level" class="big-btn">PRÓXIMO NÍVEL →</button>
+                        <button id="btn-try-again" class="big-btn">TENTAR NOVAMENTE</button>
+                        <button id="btn-menu-from-results" class="back-btn back-btn-style">← VOLTAR AO MENU</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ==================== TEST SCREEN ==================== -->
             <div id="test-screen" class="screen">
                 <h1>THIS IS A TEST</h1>
             </div>

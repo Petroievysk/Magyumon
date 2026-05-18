@@ -3,6 +3,7 @@ const screens = {
     menu: document.getElementById('screen-menu'),
     tutorial: document.getElementById('screen-tutorial'),
     game: document.getElementById('screen-game'),
+    results: document.getElementById('screen-results'),
     test: document.getElementById('test-screen'),
 };
 
@@ -18,40 +19,54 @@ document.addEventListener('DOMContentLoaded', () => {
     // Button listeners
     document.getElementById('btn-play').addEventListener('click', () => {
         showScreen('game');
-        loadLevel(levelTest);
+        loadLevel(levels, 1);
     });
 
     document.getElementById('btn-tutorial').addEventListener('click', () => {
         showScreen('tutorial');
     });
 
-    document.getElementById('btn-back').addEventListener('click', () => {
-        showScreen('menu');
+    document.querySelectorAll('.back-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            showScreen('menu');
+            resetBattleArea();
+        });
     });
+
+    // Results buttons
+    document.getElementById('btn-next-level').addEventListener('click', nextLevel);
+    document.getElementById('btn-try-again').addEventListener('click', tryAgain);
 
     // Start on main menu
     showScreen('menu');
 });
 
-const levelTest = {
-    playerUnits: [
-        { type: "fire",  icon: "🔥", name: "Fire" },
-        { type: "water", icon: "💧", name: "Water" },
-        { type: "wind",  icon: "🌪️", name: "Wind" },
-        { type: "lightning",  icon: "⚡️", name: "Lightning" },
-        { type: "rock",  icon: "⛰️️", name: "Rock" },
-    ],
-    enemyTeam: [
-        { type: "fire",  icon: "🔥", name: "Fire" },
-        { type: "water", icon: "💧", name: "Water" },
-        { type: "wind",  icon: "🌪️", name: "Wind" },
-        { type: "lightning",  icon: "⚡️", name: "Lightning" },
-        { type: "rock",  icon: "⛰️️", name: "Rock" },
-    ]
+const levels = {
+    1: {
+        playerUnits: [
+            { type: "fire",  icon: "🔥", name: "Fire" },
+            { type: "water", icon: "💧", name: "Water" },
+            { type: "wind",  icon: "🌪️", name: "Wind" },
+            { type: "lightning",  icon: "⚡️", name: "Lightning" },
+            { type: "rock",  icon: "⛰️️", name: "Rock" },
+        ],
+        enemyTeam: [
+            { type: "fire",  icon: "🔥", name: "Fire" },
+            { type: "water", icon: "💧", name: "Water" },
+            { type: "wind",  icon: "🌪️", name: "Wind" },
+            { type: "lightning",  icon: "⚡️", name: "Lightning" },
+            { type: "rock",  icon: "⛰️️", name: "Rock" },
+        ]
+    }
 };
 
-function loadLevel(level) {
+let currentLevel = 1;
+
+function loadLevel(levels, levelNumber) {
+    const level = levels[levelNumber];
     createBattleArea(level);
+    const levelNum = document.getElementById('level-number');
+    levelNum.textContent = `Level ${levelNumber}`;
     renderEnemies(level);
     renderPlayerUnits(level);
     setupEventListeners();
@@ -68,31 +83,47 @@ function getSlots(slotClass) {
 }
 
 function createBattleArea(level) {
-    let numSlots = level.enemyTeam.length;
+    const numSlots = level.enemyTeam.length;
     const container = document.getElementById('battle-container');
     container.innerHTML = ''; 
 
+    // Enemy Row
+    const enemyRow = document.createElement('div');
+    enemyRow.className = 'battle-row enemy-row';
+
+    // VS Row
+    const vsRow = document.createElement('div');
+    vsRow.className = 'battle-row vs-row';
+
+    // Player Row
+    const playerRow = document.createElement('div');
+    playerRow.className = 'battle-row player-row';
+
     for (let i = 1; i <= numSlots; i++) {
-        const lane = document.createElement('div');
-        lane.className = 'battle-lane';
-        
-        // VS button roughly in the middle
-        const isMiddle = (i === Math.ceil(numSlots / 2));
-        
-        lane.innerHTML = `
-            <button class="panel player-slot" id="player-slot${i}"></button>
-            
-            ${isMiddle ? `
-                <div class="fight-wrapper">
-                    <button id="fight-btn">VS</button>
-                </div>
-            ` : `<div class="spacer"></div>`}
-            
-            <button class="panel enemy-slot" id="enemy-slot${i}"></button>
-        `;
-        
-        container.appendChild(lane);
+        // Enemy slot
+        const enemySlot = document.createElement('button');
+        enemySlot.className = 'panel enemy-slot';
+        enemySlot.id = `enemy-slot${i}`;
+        enemyRow.appendChild(enemySlot);
+
+        // VS
+        if (i === Math.ceil(numSlots / 2)) {
+            const fightBtn = document.createElement('button');
+            fightBtn.id = 'fight-btn';
+            fightBtn.textContent = 'VS';
+            vsRow.appendChild(fightBtn);
+        }
+
+        // Player slot
+        const playerSlot = document.createElement('button');
+        playerSlot.className = 'panel player-slot';
+        playerSlot.id = `player-slot${i}`;
+        playerRow.appendChild(playerSlot);
     }
+
+    container.appendChild(enemyRow);
+    container.appendChild(vsRow);
+    container.appendChild(playerRow);
 }
 function renderEnemies(level) {
     const enemySlots = getSlots('.enemy-slot');
@@ -218,43 +249,7 @@ function createPlayerSlotClickHandler() {
     };
 }
 
-function fight() {
-    const playerSlots = getSlots('.player-slot');
-    const enemySlots = getSlots('.enemy-slot');
-
-    let wins = 0, ties = 0, losses = 0;
-
-    for (let i = 0; i < playerSlots.length; i++) {
-        const pSlot = playerSlots[i];
-        const eSlot = enemySlots[i];
-        
-        // Get type from dataset (this is what you asked for)
-        const pType = pSlot.dataset.type || '';
-        const eType = eSlot.dataset.type || '';
-        
-        if (!pType) {
-            losses++;
-            continue;
-        }
-
-        const result = getResult(pType, eType);
-
-        if (result === 'win') wins++;
-        else if (result === 'tie') ties++;
-        else losses++;
-    }
-
-    const resultArea = document.getElementById('result-area');
-    resultArea.innerHTML = `
-        <strong>Battle Result</strong><br>
-        ✅ Wins: ${wins} &nbsp;&nbsp;
-        🤝 Ties: ${ties} &nbsp;&nbsp;
-        ❌ Losses: ${losses}
-    `;
-}
 function getResult(playerType, enemyType) {
-    if (playerType === enemyType) return 'tie';
-
     if (
         (playerType === 'water' && enemyType === 'fire') ||     // Water beats Fire
         (playerType === 'fire' && enemyType === 'wind') ||      // Fire beats Wind
@@ -263,11 +258,114 @@ function getResult(playerType, enemyType) {
         (playerType === 'lightning' && enemyType === 'water')   // Lightning beats Water
     ) {
         return 'win';
+    } else if (
+        (playerType === 'fire' && enemyType === 'water') ||
+        (playerType === 'wind' && enemyType === 'fire') ||
+        (playerType === 'rock' && enemyType === 'wind') ||
+        (playerType === 'lightning' && enemyType === 'rock') ||
+        (playerType === 'water' && enemyType === 'lightning')
+    ) {
+        return 'lose';
     }
 
-    return 'lose';
+    return 'tie';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadLevel(levelTest);
-});
+function fight() {
+    const playerSlots = getSlots('.player-slot');
+    const enemySlots = getSlots('.enemy-slot');
+
+    let wins = 0, ties = 0, losses = 0;
+    const total = enemySlots.length;
+
+    for (let i = 0; i < total; i++) {
+        const pType = playerSlots[i].dataset.type || '';
+        const eType = enemySlots[i].dataset.type || '';
+        
+        if (!pType) {
+            losses++;
+            continue;
+        }
+
+        const result = getResult(pType, eType);
+        if (result === 'win') wins++;
+        else if (result === 'lose') losses++;
+        else ties++;
+    }
+
+    const isVictory = wins > total / 2;
+    const isTie = wins === losses;
+
+    showResultsScreen(wins, ties, losses, isVictory, isTie );
+}
+
+function showResultsScreen(wins, ties, losses, isVictory, isTie) {
+    const iconEl = document.getElementById('result-icon');
+    const titleEl = document.getElementById('result-title');
+    const subtitleEl = document.getElementById('result-subtitle');
+
+    // Victory
+    if (isVictory) {
+        iconEl.textContent = "🏆";
+        titleEl.textContent = "VITÓRIA!";
+        titleEl.style.color = "#22c55e";
+        subtitleEl.textContent = "Excelente estratégia!";
+        
+        document.getElementById('btn-next-level').style.display = 'block';
+        document.getElementById('btn-try-again').style.display = 'none';
+    } 
+    // Tie
+    else if (isTie) {
+        iconEl.textContent = "🤝";
+        titleEl.textContent = "EMPATE!";
+        titleEl.style.color = "#eab308";
+        subtitleEl.textContent = "Foi por pouco! Tente novamente.";
+        
+        document.getElementById('btn-next-level').style.display = 'none';
+        document.getElementById('btn-try-again').style.display = 'block';
+    } 
+    // Defeat
+    else {
+        iconEl.textContent = "💀";
+        titleEl.textContent = "DERROTA";
+        titleEl.style.color = "#ef4444";
+        subtitleEl.textContent = "Tente uma formação diferente.";
+        
+        document.getElementById('btn-next-level').style.display = 'none';
+        document.getElementById('btn-try-again').style.display = 'block';
+    }
+
+    document.getElementById('battle-stats').innerHTML = `
+        ✅ Vitórias: <strong>${wins}</strong><br>
+        🤝 Empates: <strong>${ties}</strong><br>
+        ❌ Derrotas: <strong>${losses}</strong><br>
+    `;
+
+    // Show/hide buttons
+    document.getElementById('btn-next-level').style.display = isVictory ? 'block' : 'none';
+    document.getElementById('btn-try-again').style.display = isVictory ? 'none' : 'block';
+
+    showScreen('results');
+}
+
+function nextLevel() {
+    currentLevel++;
+    if (!levels[currentLevel]) {
+        alert("🎉 Parabéns! Você completou todos os níveis!");
+        showScreen('menu');
+        return;
+    }
+    showScreen('game');
+    loadLevel(levels, currentLevel);
+}
+
+function tryAgain() {
+    showScreen('game');
+    loadLevel(levels, currentLevel);
+}
+
+function resetBattleArea() {
+    const battleContainer = document.getElementById('battle-container');
+    if (battleContainer) battleContainer.innerHTML = '';
+    document.getElementById('result-area').innerHTML = '';
+}
