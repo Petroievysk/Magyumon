@@ -1,5 +1,6 @@
 // ============== SCREEN MANAGEMENT ==============
 const screens = {
+    splash: document.getElementById('screen-splash'),
     menu: document.getElementById('screen-menu'),
     tutorial: document.getElementById('screen-tutorial'),
     game: document.getElementById('screen-game'),
@@ -16,7 +17,6 @@ function showScreen(screenName) {
 
 // ============== NAVIGATION BUTTONS ==============
 document.addEventListener('DOMContentLoaded', () => {
-    // Button listeners
     document.getElementById('btn-play').addEventListener('click', () => {
         showScreen('game');
         loadLevel(levels, 1);
@@ -33,13 +33,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Results buttons
     document.getElementById('btn-next-level').addEventListener('click', nextLevel);
     document.getElementById('btn-try-again').addEventListener('click', tryAgain);
 
-    // Start on main menu
-    showScreen('menu');
+    showScreen('splash');
+    transitionFromSplash();
 });
+
+function transitionFromSplash() {
+    setTimeout(() => {
+        const splashScreen = screens.splash;
+        splashScreen.classList.add('fade-out');
+        
+        setTimeout(() => {
+            showScreen('menu');
+            splashScreen.classList.remove('fade-out');
+        }, 600);
+    }, 2500);
+}
 
 const levels = {
     1: {
@@ -87,26 +98,21 @@ function createBattleArea(level) {
     const container = document.getElementById('battle-container');
     container.innerHTML = ''; 
 
-    // Enemy Row
     const enemyRow = document.createElement('div');
     enemyRow.className = 'battle-row enemy-row';
 
-    // VS Row
     const vsRow = document.createElement('div');
     vsRow.className = 'battle-row vs-row';
 
-    // Player Row
     const playerRow = document.createElement('div');
     playerRow.className = 'battle-row player-row';
 
     for (let i = 1; i <= numSlots; i++) {
-        // Enemy slot
         const enemySlot = document.createElement('button');
         enemySlot.className = 'panel enemy-slot';
         enemySlot.id = `enemy-slot${i}`;
         enemyRow.appendChild(enemySlot);
 
-        // VS
         if (i === Math.ceil(numSlots / 2)) {
             const fightBtn = document.createElement('button');
             fightBtn.id = 'fight-btn';
@@ -114,7 +120,6 @@ function createBattleArea(level) {
             vsRow.appendChild(fightBtn);
         }
 
-        // Player slot
         const playerSlot = document.createElement('button');
         playerSlot.className = 'panel player-slot';
         playerSlot.id = `player-slot${i}`;
@@ -144,7 +149,6 @@ function renderPlayerUnits(level) {
     unitSlots.forEach(slot => {
         slot.innerHTML = '';
         slot.className = 'unit-slot';
-        // remove any old data
         delete slot.dataset.type;
         delete slot.dataset.id;
     });
@@ -170,12 +174,10 @@ function setupUnitSlots() {
     const unitSlots = getSlots('.unit-slot');
     
     unitSlots.forEach(slot => {
-        // Remove old listener if exists
         if (slot._unitClickHandler) {
             slot.removeEventListener('click', slot._unitClickHandler);
         }
         
-        // Create and attach new handler
         slot._unitClickHandler = createUnitSlotClickHandler();
         slot.addEventListener('click', slot._unitClickHandler);
     });
@@ -184,18 +186,15 @@ function setupPlayerSlots() {
     const playerSlots = getSlots('.player-slot');
     
     playerSlots.forEach(slot => {
-        // Remove old listener if exists
         if (slot._playerClickHandler) {
             slot.removeEventListener('click', slot._playerClickHandler);
         }
         
-        // Create and attach new handler
         slot._playerClickHandler = createPlayerSlotClickHandler();
         slot.addEventListener('click', slot._playerClickHandler);
     });
 }
 function setupFightButton() {
-    // The button is created dynamically
     document.getElementById('battle-container').addEventListener('click', (e) => {
         if (e.target.id === 'fight-btn') {
             fight();
@@ -304,7 +303,6 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
     const titleEl = document.getElementById('result-title');
     const subtitleEl = document.getElementById('result-subtitle');
 
-    // Victory
     if (isVictory) {
         iconEl.textContent = "🏆";
         titleEl.textContent = "VITÓRIA!";
@@ -314,7 +312,6 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
         document.getElementById('btn-next-level').style.display = 'block';
         document.getElementById('btn-try-again').style.display = 'none';
     } 
-    // Tie
     else if (isTie) {
         iconEl.textContent = "🤝";
         titleEl.textContent = "EMPATE!";
@@ -324,7 +321,6 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
         document.getElementById('btn-next-level').style.display = 'none';
         document.getElementById('btn-try-again').style.display = 'block';
     } 
-    // Defeat
     else {
         iconEl.textContent = "💀";
         titleEl.textContent = "DERROTA";
@@ -341,7 +337,6 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
         ❌ Derrotas: <strong>${losses}</strong><br>
     `;
 
-    // Show/hide buttons
     document.getElementById('btn-next-level').style.display = isVictory ? 'block' : 'none';
     document.getElementById('btn-try-again').style.display = isVictory ? 'none' : 'block';
 
