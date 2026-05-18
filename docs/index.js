@@ -53,21 +53,79 @@ function transitionFromSplash() {
 }
 
 const levels = {
-    1: {
+    1: { 
         playerUnits: [
-            { type: "fire",  icon: "🔥", name: "Fire" },
-            { type: "water", icon: "💧", name: "Water" },
-            { type: "wind",  icon: "🌪️", name: "Wind" },
-            { type: "lightning",  icon: "⚡️", name: "Lightning" },
-            { type: "rock",  icon: "⛰️️", name: "Rock" },
+            { type: "fire", icon: "🔥"},
+            { type: "water", icon: "💧"},
+            { type: "wind", icon: "🌪️"}
         ],
         enemyTeam: [
-            { type: "fire",  icon: "🔥", name: "Fire" },
-            { type: "water", icon: "💧", name: "Water" },
-            { type: "wind",  icon: "🌪️", name: "Wind" },
-            { type: "lightning",  icon: "⚡️", name: "Lightning" },
-            { type: "rock",  icon: "⛰️️", name: "Rock" },
-        ]
+            { type: "fire", icon: "🔥" },
+            { type: "wind", icon: "🌪️" },
+            { type: "rock", icon: "⛰️" }
+        ],
+    },
+    2: { 
+        playerUnits: [
+            { type: "rock", icon: "⛰️" },
+            { type: "wind", icon: "🌪️" },
+            { type: "fire", icon: "🔥" },
+            { type: "lightning", icon: "⚡️" }
+        ],
+        enemyTeam: [
+            { type: "water", icon: "💧" },
+            { type: "wind", icon: "🌪️" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "rock", icon: "⛰️" }
+        ],
+    },
+    3: { 
+        playerUnits: [
+            { type: "fire", icon: "🔥" },
+            { type: "water", icon: "💧" },
+            { type: "wind", icon: "🌪️" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "rock", icon: "⛰️" }
+        ],
+        enemyTeam: [
+            { type: "water", icon: "💧" },
+            { type: "wind", icon: "🌪️" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "rock", icon: "⛰️" },
+            { type: "fire", icon: "🔥" }
+        ],
+    },
+    4: {
+        playerUnits: [
+            { type: "fire", icon: "🔥" },
+            { type: "water", icon: "💧" },
+            { type: "wind", icon: "🌪️" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "rock", icon: "⛰️" }
+        ],
+        enemyTeam: [
+            { type: "fire", icon: "🔥" },
+            { type: "rock", icon: "⛰️" },
+            { type: "fire", icon: "🔥" },
+            { type: "water", icon: "💧" },
+            { type: "wind", icon: "🌪️" }
+        ],
+    },
+    5: {
+        playerUnits: [
+            { type: "fire", icon: "🔥" },
+            { type: "water", icon: "💧" },
+            { type: "wind", icon: "🌪️" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "rock", icon: "⛰️" }
+        ],
+        enemyTeam: [
+            { type: "water", icon: "💧" },
+            { type: "water", icon: "💧" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "lightning", icon: "⚡️" },
+            { type: "rock", icon: "⛰️" }
+        ],
     }
 };
 
