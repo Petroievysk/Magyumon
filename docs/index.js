@@ -88,11 +88,11 @@ const levels = {
             { type: "rock", icon: "⛰️" }
         ],
         enemyTeam: [
-            { type: "water", icon: "💧" },
             { type: "wind", icon: "🌪️" },
             { type: "lightning", icon: "⚡️" },
             { type: "rock", icon: "⛰️" },
-            { type: "fire", icon: "🔥" }
+            { type: "fire", icon: "🔥" },
+            { type: "water", icon: "💧" },
         ],
     },
     4: {
