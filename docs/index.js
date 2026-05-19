@@ -1,3 +1,54 @@
+// ============== AUDIO STUFF ==============
+let currentAudio = null;
+let muted = false;
+
+const audio = {
+    menu: new Audio('audio/menu.mp3'),
+    victory: new Audio('audio/victory.mp3'),
+    defeat: new Audio('audio/defeat.mp3'),
+    tie: new Audio('audio/tie.mp3')
+};
+
+audio.menu.loop = true;
+
+audio.victory.loop = false;
+audio.defeat.loop = false;
+audio.tie.loop = false;
+
+function playAudio(type) {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+    currentAudio = audio[type];
+    
+    if (currentAudio) {
+        currentAudio.volume = muted ? 0 : 0.7;
+        currentAudio.play().catch(e => {
+            console.log("Audio play prevented (user interaction needed)");
+        });
+    }
+}
+function toggleMute() {
+    muted = !muted;
+    
+    document.querySelectorAll('.mute-btn').forEach(btn => {
+            btn.textContent = muted ? '🔊' : '🔇';
+    });
+
+    if (currentAudio) {
+        currentAudio.volume = muted ? 0 : 0.7;
+    }
+}
+function stopAllAudio() {
+    Object.values(audio).forEach(a => {
+        a.pause();
+        a.currentTime = 0;
+    });
+    currentAudio = null;
+}
+
 // ============== SCREEN MANAGEMENT ==============
 const screens = {
     splash: document.getElementById('screen-splash'),
@@ -13,6 +64,21 @@ function showScreen(screenName) {
         screen.classList.remove('active');
     });
     screens[screenName].classList.add('active');
+
+    if (screenName === 'menu' || screenName === 'tutorial') {
+        if (!currentAudio || currentAudio !== audio.menu) {
+            playAudio('menu');
+        }
+    } 
+    else if (screenName === 'results') {
+    } 
+    else {
+        if (currentAudio) {
+            currentAudio.pause();
+        }
+    }
+
+    if (screenName === 'game') stopAllAudio();
 }
 
 // ============== NAVIGATION BUTTONS ==============
@@ -36,6 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-next-level').addEventListener('click', nextLevel);
     document.getElementById('btn-try-again').addEventListener('click', tryAgain);
 
+    document.querySelectorAll('.mute-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            toggleMute();
+        });
+    });
+
     showScreen('splash');
     transitionFromSplash();
 });
@@ -47,10 +119,18 @@ function transitionFromSplash() {
         
         setTimeout(() => {
             showScreen('menu');
-            splashScreen.classList.remove('fade-out');
+            // splashScreen.classList.remove('fade-out');
         }, 600);
     }, 2500);
 }
+
+const units = {
+    Fire: { type: "fire", icon: "🔥"},
+    Water: { type: "water", icon: "💧"},
+    Wind: { type: "wind", icon: "🌪️" },
+    Lightning: { type: "lightning", icon: "⚡️" },
+    Rock: { type: "rock", icon: "⛰️" },
+};
 
 const levels = {
     1: { 
@@ -350,7 +430,7 @@ function fight() {
         else ties++;
     }
 
-    const isVictory = wins > total / 2;
+    const isVictory = wins > losses;
     const isTie = wins === losses;
 
     showResultsScreen(wins, ties, losses, isVictory, isTie );
@@ -366,6 +446,7 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
         titleEl.textContent = "VITÓRIA!";
         titleEl.style.color = "#22c55e";
         subtitleEl.textContent = "Excelente estratégia!";
+        playAudio('victory');
         
         document.getElementById('btn-next-level').style.display = 'block';
         document.getElementById('btn-try-again').style.display = 'none';
@@ -375,6 +456,7 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
         titleEl.textContent = "EMPATE!";
         titleEl.style.color = "#eab308";
         subtitleEl.textContent = "Foi por pouco! Tente novamente.";
+        playAudio('tie');
         
         document.getElementById('btn-next-level').style.display = 'none';
         document.getElementById('btn-try-again').style.display = 'block';
@@ -384,6 +466,7 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
         titleEl.textContent = "DERROTA";
         titleEl.style.color = "#ef4444";
         subtitleEl.textContent = "Tente uma formação diferente.";
+        playAudio('defeat');
         
         document.getElementById('btn-next-level').style.display = 'none';
         document.getElementById('btn-try-again').style.display = 'block';

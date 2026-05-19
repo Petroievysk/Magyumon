@@ -1,6 +1,7 @@
 test/
 og-images/
 main-menu/
-.html
-.js
-.css
+*.html
+*.js
+*.css
+*.pdf
