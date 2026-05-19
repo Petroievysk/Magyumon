@@ -80,38 +80,6 @@ function showScreen(screenName) {
 
     if (screenName === 'game') stopAllAudio();
 }
-
-// ============== NAVIGATION BUTTONS ==============
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btn-play').addEventListener('click', () => {
-        showScreen('game');
-        loadLevel(levels, 1);
-    });
-
-    document.getElementById('btn-tutorial').addEventListener('click', () => {
-        showScreen('tutorial');
-    });
-
-    document.querySelectorAll('.back-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            showScreen('menu');
-            resetBattleArea();
-        });
-    });
-
-    document.getElementById('btn-next-level').addEventListener('click', nextLevel);
-    document.getElementById('btn-try-again').addEventListener('click', tryAgain);
-
-    document.querySelectorAll('.mute-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            toggleMute();
-        });
-    });
-
-    showScreen('splash');
-    transitionFromSplash();
-});
-
 function transitionFromSplash() {
     setTimeout(() => {
         const splashScreen = screens.splash;
@@ -124,113 +92,7 @@ function transitionFromSplash() {
     }, 2500);
 }
 
-const units = {
-    Fire: { type: "fire", icon: "🔥"},
-    Water: { type: "water", icon: "💧"},
-    Wind: { type: "wind", icon: "🌪️" },
-    Lightning: { type: "lightning", icon: "⚡️" },
-    Rock: { type: "rock", icon: "⛰️" },
-};
-
-const levels = {
-    1: { 
-        playerUnits: [
-            { type: "fire", icon: "🔥"},
-            { type: "water", icon: "💧"},
-            { type: "wind", icon: "🌪️"}
-        ],
-        enemyTeam: [
-            { type: "fire", icon: "🔥" },
-            { type: "wind", icon: "🌪️" },
-            { type: "rock", icon: "⛰️" }
-        ],
-    },
-    2: { 
-        playerUnits: [
-            { type: "rock", icon: "⛰️" },
-            { type: "wind", icon: "🌪️" },
-            { type: "fire", icon: "🔥" },
-            { type: "lightning", icon: "⚡️" }
-        ],
-        enemyTeam: [
-            { type: "water", icon: "💧" },
-            { type: "wind", icon: "🌪️" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "rock", icon: "⛰️" }
-        ],
-    },
-    3: { 
-        playerUnits: [
-            { type: "fire", icon: "🔥" },
-            { type: "water", icon: "💧" },
-            { type: "wind", icon: "🌪️" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "rock", icon: "⛰️" }
-        ],
-        enemyTeam: [
-            { type: "wind", icon: "🌪️" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "rock", icon: "⛰️" },
-            { type: "fire", icon: "🔥" },
-            { type: "water", icon: "💧" },
-        ],
-    },
-    4: {
-        playerUnits: [
-            { type: "fire", icon: "🔥" },
-            { type: "water", icon: "💧" },
-            { type: "wind", icon: "🌪️" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "rock", icon: "⛰️" }
-        ],
-        enemyTeam: [
-            { type: "fire", icon: "🔥" },
-            { type: "rock", icon: "⛰️" },
-            { type: "fire", icon: "🔥" },
-            { type: "water", icon: "💧" },
-            { type: "wind", icon: "🌪️" }
-        ],
-    },
-    5: {
-        playerUnits: [
-            { type: "fire", icon: "🔥" },
-            { type: "water", icon: "💧" },
-            { type: "wind", icon: "🌪️" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "rock", icon: "⛰️" }
-        ],
-        enemyTeam: [
-            { type: "water", icon: "💧" },
-            { type: "water", icon: "💧" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "lightning", icon: "⚡️" },
-            { type: "rock", icon: "⛰️" }
-        ],
-    }
-};
-
-let currentLevel = 1;
-
-function loadLevel(levels, levelNumber) {
-    const level = levels[levelNumber];
-    createBattleArea(level);
-    const levelNum = document.getElementById('level-number');
-    levelNum.textContent = `Level ${levelNumber}`;
-    renderEnemies(level);
-    renderPlayerUnits(level);
-    setupEventListeners();
-}
-
-function getSlots(slotClass) {
-    const slots = Array.from(document.querySelectorAll(slotClass));
-    slots.sort((a, b) => {
-        const idA = parseInt(a.id.replace(/\D/g, '')) || 0;
-        const idB = parseInt(b.id.replace(/\D/g, '')) || 0;
-        return idA - idB;
-    });
-    return slots;
-}
-
+// ================= RENDERING ====================
 function createBattleArea(level) {
     const numSlots = level.enemyTeam.length;
     const container = document.getElementById('battle-container');
@@ -386,22 +248,152 @@ function createPlayerSlotClickHandler() {
     };
 }
 
+// ============== NAVIGATION BUTTONS ==============
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btn-play').addEventListener('click', () => {
+        showScreen('game');
+        loadLevel(1);
+    });
+
+    document.getElementById('btn-tutorial').addEventListener('click', () => {
+        showScreen('tutorial');
+    });
+
+    document.querySelectorAll('.back-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            showScreen('menu');
+            resetBattleArea();
+        });
+    });
+
+    document.getElementById('btn-next-level').addEventListener('click', nextLevel);
+    document.getElementById('btn-try-again').addEventListener('click', tryAgain);
+
+    document.querySelectorAll('.mute-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            toggleMute();
+        });
+    });
+
+    showScreen('splash');
+    transitionFromSplash();
+});
+
+// ================= GAME LOGIC =================
+const units = {
+    Fire: { type: "fire", icon: "🔥"},
+    Water: { type: "water", icon: "💧"},
+    Wind: { type: "wind", icon: "🌪️" },
+    Lightning: { type: "lightning", icon: "⚡️" },
+    Rock: { type: "rock", icon: "⛰️" },
+};
+const counters = {
+    fire: "water",      // water beats fire
+    water: "lightning", // lightning beats water
+    lightning: "rock",  // rock beats lightning
+    rock: "wind",       // wind beats rock
+    wind: "fire"        // fire beats wind
+};
+const allUnitTypes = ["fire", "water", "wind", "lightning", "rock"];
+
+function getRandomUnit() {
+    const type = allUnitTypes[Math.floor(Math.random() * allUnitTypes.length)];
+    return { type: type, icon: units[Object.keys(units).find(k => units[k].type === type)].icon };
+}
+function shuffle(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+function generateLevel(levelNumber) {
+    let numSlots;
+    let enemyDuplicates = 0;
+    let maxPlayerWins = Infinity;
+
+    if (levelNumber === 1) numSlots = 3;
+    else if (levelNumber === 2) numSlots = 4;
+    else numSlots = 5;
+
+    if (levelNumber === 4) {
+        enemyDuplicates = 1;
+        maxPlayerWins = 4;
+    } else if (levelNumber === 5) {
+        enemyDuplicates = 2;
+        maxPlayerWins = 3;
+    }
+
+    let enemyTeam = [];
+
+    const uniqueCount = numSlots - enemyDuplicates;
+    const uniqueEnemies = shuffle(allUnitTypes).slice(0, uniqueCount)
+        .map(type => ({
+            type: type,
+            icon: units[Object.keys(units).find(k => units[k].type === type)].icon
+        }));
+
+    enemyTeam = [...uniqueEnemies];
+
+    for (let i = 0; i < enemyDuplicates; i++) {
+        const randomEnemy = uniqueEnemies[Math.floor(Math.random() * uniqueEnemies.length)];
+        enemyTeam.push({...randomEnemy});
+    }
+
+    enemyTeam = shuffle(enemyTeam);
+
+    let playerUnits = enemyTeam.map(enemy => {
+        const counterType = counters[enemy.type];
+        return {
+            type: counterType,
+            icon: units[Object.keys(units).find(k => units[k].type === counterType)].icon
+        };
+    });
+
+    if (maxPlayerWins < Infinity) {
+        const numToReplace = playerUnits.length - maxPlayerWins;
+        const indicesToReplace = shuffle([...Array(playerUnits.length).keys()]).slice(0, numToReplace);
+        
+        indicesToReplace.forEach(idx => {
+            playerUnits[idx] = getRandomUnit();
+        });
+    }
+
+    playerUnits = shuffle(playerUnits);
+
+    return { playerUnits, enemyTeam };
+}
+
+let currentLevel = 1;
+
+function loadLevel(levelNumber) {
+    const levelData = generateLevel(levelNumber);
+    
+    createBattleArea(levelData);
+    document.getElementById('level-number').textContent = `Level ${levelNumber}`;
+    
+    renderEnemies(levelData);
+    renderPlayerUnits(levelData);
+    setupEventListeners();
+}
+
+function getSlots(slotClass) {
+    const slots = Array.from(document.querySelectorAll(slotClass));
+    slots.sort((a, b) => {
+        const idA = parseInt(a.id.replace(/\D/g, '')) || 0;
+        const idB = parseInt(b.id.replace(/\D/g, '')) || 0;
+        return idA - idB;
+    });
+    return slots;
+}
+
 function getResult(playerType, enemyType) {
-    if (
-        (playerType === 'water' && enemyType === 'fire') ||     // Water beats Fire
-        (playerType === 'fire' && enemyType === 'wind') ||      // Fire beats Wind
-        (playerType === 'wind' && enemyType === 'rock') ||      // Wind beats Rock
-        (playerType === 'rock' && enemyType === 'lightning') || // Rock beats Lightning
-        (playerType === 'lightning' && enemyType === 'water')   // Lightning beats Water
-    ) {
+    if (counters[enemyType] === playerType) {
         return 'win';
-    } else if (
-        (playerType === 'fire' && enemyType === 'water') ||
-        (playerType === 'wind' && enemyType === 'fire') ||
-        (playerType === 'rock' && enemyType === 'wind') ||
-        (playerType === 'lightning' && enemyType === 'rock') ||
-        (playerType === 'water' && enemyType === 'lightning')
-    ) {
+    }
+    if (counters[playerType] === enemyType) {
         return 'lose';
     }
 
@@ -486,13 +478,13 @@ function showResultsScreen(wins, ties, losses, isVictory, isTie) {
 
 function nextLevel() {
     currentLevel++;
-    if (!levels[currentLevel]) {
+    if (currentLevel > 5) {
         alert("🎉 Parabéns! Você completou todos os níveis!");
         showScreen('menu');
         return;
     }
     showScreen('game');
-    loadLevel(levels, currentLevel);
+    loadLevel(currentLevel);
 }
 
 function tryAgain() {
