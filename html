@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MAGYUMON</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="main-container">
+
+            <!-- ==================== SPLASH SCREEN ==================== -->
+            <div id="screen-splash" class="screen">
+                <div class="splash-overlay">
+                    <div class="splash-content">
+                        <div class="splash-icon">🔥💧🌪️⚡⛰️</div>
+                        <h1 class="splash-title">MAGYUMON</h1>
+                        <div class="splash-loader">
+                            <div class="loader-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== MAIN MENU ==================== -->
+            <div id="screen-menu" class="screen">
+                <div class="menu">
+                    <h1 class="title">MAGYUMON</h1>
+<div class="menu-buttons">
+    <button id="btn-play" class="big-btn">JOGAR</button>
+    <button id="btn-tutorial" class="big-btn">COMO JOGAR</button>
+    <button id="btn-story" class="big-btn">ENREDO</button>
+</div>
+                    <button id="mute-btn" class="mute-btn">🔇</button>
+                </div>
+            </div>
+
+            <!-- ==================== TUTORIAL ==================== -->
+            <div id="screen-tutorial" class="screen">
+                <div class="tutorial-overlay" style="position: static; width: 100%; height: 100%; background: none;">
+                    <div class="tutorial-box">
+                        <h2>COMO JOGAR</h2>
+                        <div class="tutorial-content">
+                            <p><strong>OBJETIVO:</strong> O combate acontece em uma série de duelos 1v1. Quem conseguir o maior número de vitórias nas linhas de batalha vence a partida.</p>
+                            
+                            <p><strong>ESTRATÉGIA:</strong> A ordem de suas unidades importa. Analíse o time adversário e posicione seus lutadores de forma inteligente.</p>
+                            <p><strong>ELEMENTOS:</strong> Use a vantagem elemental a seu favor. 
+                                <ul>
+                                    <li>💧 <strong>Água</strong> ganha de 🔥 <strong>Fogo</strong></li>
+                                    <li>🔥 <strong>Fogo</strong> ganha de 🌪️ <strong>Vento</strong></li>
+                                    <li>🌪️ <strong>Vento</strong> ganha de ⛰️ <strong>Terra</strong></li>
+                                    <li>⛰️ <strong>Terra</strong> ganha de ⚡️ <strong>Raio</strong></li>
+                                    <li>⚡️ <strong>Raio</strong> ganha de 💧 <strong>Água</strong></li>
+                                </ul>
+
+                                <button id="btn-menu-from-tutorial" class="back-btn back-btn-style">← VOLTAR</button>
+                        </div>
+                    </div>
+                    <button id="mute-btn" class="mute-btn">🔇</button>
+                </div>
+            </div>
+<!-- ==================== STORY SCREEN ==================== -->
+<div id="screen-story" class="screen">
+    <div class="tutorial-overlay">
+
+        <div class="tutorial-box">
+
+            <h2>ENREDO</h2>
+
+            <img
+                src="./images/maya.png"
+                alt="Maya"
+                class="story-character"
+            >
+
+            <div class="tutorial-content">
+
+                <p>
+                    Maya vive na cidade de Cerulyan e quer participar do
+                    torneio anual de MAGYUMON para se tornar a melhor
+                    jogadora da cidade.
+                </p>
+
+                <p>
+                    Para isso ela terá que enfrentar vários competidores
+                    que também têm as mesmas ambições.
+                </p>
+
+            </div>
+
+            <button
+                id="btn-menu-from-story"
+                class="back-btn back-btn-style">
+                ← VOLTAR
+            </button>
+
+        </div>
+
+    </div>
+
+    <button class="mute-btn">🔇</button>
+</div>
+            <!-- ==================== GAME SCREEN ==================== -->
+            <div id="screen-game" class="screen">
+                <header>
+                    <h1>⚔️ BATTLE ⚔️</h1>
+                    <p class="subtitle" id="level-number"></p>
+
+                    <button id="btn-menu-from-game" class="back-btn">
+                        ← MENU
+                    </button>
+                </header>
+
+                <main class="game-area">
+                    <div id="battle-container" class="battle-container"></div>
+                    <div id="result-area" style="margin-top: 30px; text-align: center; font-size: 1.4em;"></div>
+                </main>
+                <div class="unit-area">
+                    <div class="unit-list">
+                        <button class="unit-slot"></button>
+                        <button class="unit-slot"></button>
+                        <button class="unit-slot"></button>
+                        <button class="unit-slot"></button>
+                        <button class="unit-slot"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== RESULTS SCREEN ==================== -->
+            <div id="screen-results" class="screen">
+                <div class="results-container">
+                    <div id="result-icon" class="result-icon"></div>
+                    
+                    <h1 id="result-title" class="result-title"></h1>
+                    <p id="result-subtitle" class="result-subtitle"></p>
+                    
+                    <div id="battle-stats" class="battle-stats"></div>
+                    
+                    <div class="results-buttons">
+                        <button id="btn-next-level" class="big-btn">PRÓXIMO NÍVEL →</button>
+                        <button id="btn-try-again" class="big-btn">TENTAR NOVAMENTE</button>
+                        <button id="btn-menu-from-results" class="back-btn back-btn-style">← VOLTAR AO MENU</button>
+                    </div>
+                </div>
+                <button id="mute-btn" class="mute-btn">🔇</button>
+            </div>
+            
+            <!-- ==================== TEST SCREEN ==================== -->
+            <div id="test-screen" class="screen">
+                <h1>THIS IS A TEST</h1>
+            </div>
+
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
