@@ -551,10 +551,12 @@ h1 {
 
 #screen-story .tutorial-box {
     max-width: 600px;
-    height: 700px;
+    min-height: 700px;
+
+    display: flex;
+    flex-direction: column;
 }
 
 #screen-story .tutorial-content {
-    text-align: center;
-    font-size: 1.15rem;
+    flex: 1;
 }
